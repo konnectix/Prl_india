@@ -10,6 +10,22 @@
     </a>
 </div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
 <div class="row">
     <div class="col-md-8">
         <div class="card">
@@ -51,7 +67,7 @@
                     <div class="mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
-                                   {{ old('is_active', true) ? 'checked' : '' }}>
+                                   {{ old('is_active') ? 'checked' : 'checked' }}>
                             <label class="form-check-label" for="is_active">
                                 Active
                             </label>

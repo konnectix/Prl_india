@@ -32,6 +32,11 @@ class GalleryCategory extends Model
         return $this->hasMany(GalleryPhoto::class, 'category_id')->where('is_active', true)->orderBy('sort_order');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     protected static function boot()
     {
         parent::boot();
