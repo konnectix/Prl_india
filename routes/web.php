@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\PressCategoryController;
 use App\Http\Controllers\Admin\PressCoverageController;
 use App\Http\Controllers\Admin\ContactLocationController;
 use App\Http\Controllers\Admin\ContactInfoController;
+use App\Http\Controllers\Admin\VideoCategoryController;
+use App\Http\Controllers\Admin\VideoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -123,6 +125,36 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 ]
             ]);
             Route::patch('/info/{info}/toggle-status', [ContactInfoController::class, 'toggleStatus'])->name('info.toggle-status');
+        });
+
+        // Video Management Routes
+        Route::prefix('video')->name('video.')->group(function () {
+            Route::resource('categories', VideoCategoryController::class, [
+                'names' => [
+                    'index' => 'categories.index',
+                    'create' => 'categories.create',
+                    'store' => 'categories.store',
+                    'show' => 'categories.show',
+                    'edit' => 'categories.edit',
+                    'update' => 'categories.update',
+                    'destroy' => 'categories.destroy',
+                ]
+            ]);
+
+            Route::resource('videos', VideoController::class, [
+                'names' => [
+                    'index' => 'videos.index',
+                    'create' => 'videos.create',
+                    'store' => 'videos.store',
+                    'show' => 'videos.show',
+                    'edit' => 'videos.edit',
+                    'update' => 'videos.update',
+                    'destroy' => 'videos.destroy',
+                ]
+            ]);
+            Route::post('/videos/bulk-delete', [VideoController::class, 'bulkDelete'])->name('videos.bulk-delete');
+            Route::patch('/videos/{video}/toggle-featured', [VideoController::class, 'toggleFeatured'])->name('videos.toggle-featured');
+            Route::patch('/videos/{video}/toggle-status', [VideoController::class, 'toggleStatus'])->name('videos.toggle-status');
         });
     });
 });

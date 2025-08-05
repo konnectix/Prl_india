@@ -7,6 +7,10 @@ use App\Models\PressCoverage;
 use App\Models\PressCategory;
 use App\Models\GalleryPhoto;
 use App\Models\GalleryCategory;
+use App\Models\ContactLocation;
+use App\Models\ContactInfo;
+use App\Models\Video;
+use App\Models\VideoCategory;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -110,7 +114,13 @@ class IndexController extends Controller
      */
     public function contact()
     {
-        return view('frontend.sections.contact');
+        $locations = ContactLocation::active()->ordered()->get();
+        $contactInfo = ContactInfo::active()->ordered()->get();
+        
+        // Group contact info by section for easier use in views
+        $groupedContactInfo = $contactInfo->groupBy('section');
+        
+        return view('frontend.sections.contact', compact('locations', 'contactInfo', 'groupedContactInfo'));
     }
 
     /**
@@ -201,7 +211,11 @@ class IndexController extends Controller
      */
     public function video()
     {
-        return view('frontend.sections.video');
+        $videos = Video::with('category')->active()->ordered()->paginate(9);
+        $categories = VideoCategory::active()->ordered()->get();
+        $totalVideos = Video::active()->count();
+
+        return view('frontend.sections.video', compact('videos', 'categories', 'totalVideos'));
     }
 
     /**

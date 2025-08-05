@@ -28,7 +28,7 @@
 <link href="{{asset('frontend/assets/css/color.css')}}" rel="stylesheet">
 <link href="{{asset('frontend/assets/css/style.css')}}" rel="stylesheet">
 <link href="{{asset('frontend/assets/css/responsive.css')}}" rel="stylesheet">
-
+ @yield('styles')
 </head>
 
 

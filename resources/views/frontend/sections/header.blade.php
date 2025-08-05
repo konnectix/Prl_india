@@ -140,7 +140,7 @@
                                             </ul>
                                         </li> 
                                         <li><a href="{{ route('frontend.blog') }}">Blog</a></li>  
-                                        <li><a href="">Network</a></li>
+                                        <li><a href="{{ route('frontend.contact') }}">Network</a></li>
                                         <li class="dropdown"><a href="#">Media</a>
                                             <ul>
                                                 <li><a href="{{ route('frontend.press-coverage') }}">Press Coverage</a></li>

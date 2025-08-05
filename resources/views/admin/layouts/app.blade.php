@@ -521,7 +521,8 @@
                         <li><a href="{{ route('admin.press.articles.index') }}"><i class="fas fa-newspaper"></i>Press Coverage</a></li>
                         <li><a href="{{ route('admin.gallery.categories.index') }}"><i class="fas fa-folder"></i>Gallery Categories</a></li>
                         <li><a href="{{ route('admin.gallery.photos.index') }}"><i class="fas fa-images"></i>Photos</a></li>
-                        <li><a href="#"><i class="fas fa-video"></i>Videos</a></li>
+                        <li><a href="{{ route('admin.video.categories.index') }}"><i class="fas fa-folder-open"></i>Video Categories</a></li>
+                        <li><a href="{{ route('admin.video.videos.index') }}"><i class="fas fa-video"></i>Videos</a></li>
                     </ul>
                 </li>
                 <li>
