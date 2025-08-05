@@ -1,0 +1,273 @@
+@extends('admin.layouts.app')
+
+@section('title', 'Edit Photo')
+
+@section('content')
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Edit Photo</h1>
+    <a href="{{ route('admin.gallery.photos.index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Photos
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Photo Information</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ route('admin.gallery.photos.update', $photo) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                        <select class="form-select @error('category_id') is-invalid @enderror" 
+                                id="category_id" name="category_id" required>
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" 
+                                        {{ old('category_id', $photo->category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Photo Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                               id="title" name="title" value="{{ old('title', $photo->title) }}" required>
+                        @error('title')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control @error('description') is-invalid @enderror" 
+                                  id="description" name="description" rows="3">{{ old('description', $photo->description) }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Current Image Display -->
+                    <div class="mb-3">
+                        <label class="form-label">Current Image</label>
+                        <div class="current-image mb-3">
+                            @if($photo->image_path)
+                                <img src="{{ asset('storage/' . $photo->image_path) }}" 
+                                     class="img-thumbnail" style="max-height: 150px;">
+                                <p class="text-muted mt-2">Uploaded file: {{ basename($photo->image_path) }}</p>
+                            @elseif($photo->image_url)
+                                <img src="{{ $photo->image_url }}" 
+                                     class="img-thumbnail" style="max-height: 150px;">
+                                <p class="text-muted mt-2">External URL: {{ $photo->image_url }}</p>
+                            @else
+                                <div class="bg-light p-4 text-center text-muted">No image</div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Image Update Options -->
+                    <div class="mb-3">
+                        <label class="form-label">Update Image (Optional)</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="image_source" id="keep_current" value="keep" checked>
+                            <label class="btn btn-outline-secondary" for="keep_current">Keep Current</label>
+                            
+                            <input type="radio" class="btn-check" name="image_source" id="upload_option" value="upload">
+                            <label class="btn btn-outline-primary" for="upload_option">Upload New</label>
+                            
+                            <input type="radio" class="btn-check" name="image_source" id="url_option" value="url">
+                            <label class="btn btn-outline-primary" for="url_option">Use URL</label>
+                        </div>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="mb-3" id="upload_section" style="display: none;">
+                        <label for="image" class="form-label">Upload New Image</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" 
+                               id="image" name="image" accept="image/*">
+                        @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Supported formats: JPEG, PNG, JPG, GIF. Max size: 2MB</div>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="mb-3" id="url_section" style="display: none;">
+                        <label for="image_url" class="form-label">Image URL</label>
+                        <input type="url" class="form-control @error('image_url') is-invalid @enderror" 
+                               id="image_url" name="image_url" value="{{ old('image_url', $photo->image_url) }}"
+                               placeholder="https://example.com/image.jpg">
+                        @error('image_url')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="alt_text" class="form-label">Alt Text</label>
+                        <input type="text" class="form-control @error('alt_text') is-invalid @enderror" 
+                               id="alt_text" name="alt_text" value="{{ old('alt_text', $photo->alt_text) }}"
+                               placeholder="Descriptive text for accessibility">
+                        @error('alt_text')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sort_order" class="form-label">Sort Order</label>
+                        <input type="number" class="form-control @error('sort_order') is-invalid @enderror" 
+                               id="sort_order" name="sort_order" value="{{ old('sort_order', $photo->sort_order) }}" min="0">
+                        @error('sort_order')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Lower numbers appear first</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                   {{ old('is_active', $photo->is_active) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="is_active">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Photo
+                        </button>
+                        <a href="{{ route('admin.gallery.photos.index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Photo Details</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Category:</strong> {{ $photo->category->name }}</p>
+                <p><strong>Current Status:</strong> 
+                    @if($photo->is_active)
+                        <span class="badge bg-success">Active</span>
+                    @else
+                        <span class="badge bg-secondary">Inactive</span>
+                    @endif
+                </p>
+                <p><strong>Created:</strong> {{ $photo->created_at->format('M d, Y') }}</p>
+                <p><strong>Updated:</strong> {{ $photo->updated_at->format('M d, Y') }}</p>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">New Image Preview</h6>
+            </div>
+            <div class="card-body text-center">
+                <div id="image_preview" style="display: none;">
+                    <img id="preview_img" class="img-fluid rounded" style="max-height: 200px;">
+                </div>
+                <div id="no_preview" class="text-muted">
+                    <i class="fas fa-image fa-3x mb-2"></i>
+                    <p>No new image selected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const keepCurrent = document.getElementById('keep_current');
+        const uploadOption = document.getElementById('upload_option');
+        const urlOption = document.getElementById('url_option');
+        const uploadSection = document.getElementById('upload_section');
+        const urlSection = document.getElementById('url_section');
+        const imageInput = document.getElementById('image');
+        const imageUrlInput = document.getElementById('image_url');
+        const previewDiv = document.getElementById('image_preview');
+        const previewImg = document.getElementById('preview_img');
+        const noPreview = document.getElementById('no_preview');
+
+        // Toggle between options
+        keepCurrent.addEventListener('change', function() {
+            if (this.checked) {
+                uploadSection.style.display = 'none';
+                urlSection.style.display = 'none';
+                imageInput.value = '';
+                imageUrlInput.value = '{{ old("image_url", $photo->image_url) }}';
+                hidePreview();
+            }
+        });
+
+        uploadOption.addEventListener('change', function() {
+            if (this.checked) {
+                uploadSection.style.display = 'block';
+                urlSection.style.display = 'none';
+                imageUrlInput.value = '';
+                hidePreview();
+            }
+        });
+
+        urlOption.addEventListener('change', function() {
+            if (this.checked) {
+                uploadSection.style.display = 'none';
+                urlSection.style.display = 'block';
+                imageInput.value = '';
+                if (imageUrlInput.value) {
+                    showPreview(imageUrlInput.value);
+                }
+            }
+        });
+
+        // Image upload preview
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    showPreview(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                hidePreview();
+            }
+        });
+
+        // Image URL preview
+        imageUrlInput.addEventListener('input', function() {
+            const url = this.value.trim();
+            if (url && urlOption.checked) {
+                showPreview(url);
+            } else if (!url) {
+                hidePreview();
+            }
+        });
+
+        function showPreview(src) {
+            previewImg.src = src;
+            previewDiv.style.display = 'block';
+            noPreview.style.display = 'none';
+        }
+
+        function hidePreview() {
+            previewDiv.style.display = 'none';
+            noPreview.style.display = 'block';
+        }
+    });
+</script>
+@endsection
