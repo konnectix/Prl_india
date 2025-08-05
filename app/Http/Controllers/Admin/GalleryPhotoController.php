@@ -7,6 +7,7 @@ use App\Models\GalleryPhoto;
 use App\Models\GalleryCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class GalleryPhotoController extends Controller
 {
@@ -37,33 +38,79 @@ class GalleryPhotoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:gallery_categories,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'required_without:image_url|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_url' => 'required_without:image|url',
-            'alt_text' => 'nullable|string|max:255',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean'
-        ]);
+        try {
+            // Debug logging
+            Log::info('Gallery Photo Store Method Called');
+            Log::info('Request Data: ', $request->all());
+            
+            // Custom validation to ensure either image or image_url is provided
+            $request->validate([
+                'category_id' => 'required|exists:gallery_categories,id',
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'alt_text' => 'nullable|string|max:255',
+                'sort_order' => 'nullable|integer|min:0',
+            ]);
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+            // Additional validation for image/URL
+            Log::info('Image file present: ' . ($request->hasFile('image') ? 'YES' : 'NO'));
+            Log::info('Image URL value: ' . ($request->image_url ?? 'EMPTY'));
+            
+            if (!$request->hasFile('image') && empty($request->image_url)) {
+                Log::info('Both image file and URL are empty - returning error');
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['image' => 'Please upload an image file or provide an image URL.']);
+            }
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('gallery', 'public');
-            $data['image_path'] = $imagePath;
-            $data['image_url'] = null;
-        } elseif ($request->image_url) {
-            $data['image_path'] = null;
+            if ($request->hasFile('image')) {
+                $request->validate([
+                    'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+                ]);
+            }
+
+            if (!empty($request->image_url)) {
+                $request->validate([
+                    'image_url' => 'url'
+                ]);
+            }
+
+            Log::info('Validation passed');
+
+            $data = $request->only(['category_id', 'title', 'description', 'alt_text', 'sort_order']);
+            $data['is_active'] = $request->has('is_active');
+
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('gallery', 'public');
+                $data['image_path'] = $imagePath;
+                $data['image_url'] = null;
+            } elseif ($request->image_url) {
+                $data['image_path'] = null;
+                $data['image_url'] = $request->image_url;
+            }
+
+            Log::info('Processed Data: ', $data);
+
+            $photo = GalleryPhoto::create($data);
+            
+            Log::info('Photo Created: ', ['id' => $photo->id, 'title' => $photo->title]);
+
+            return redirect()->route('admin.gallery.photos.index')
+                ->with('success', 'Gallery photo added successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Gallery Photo Validation Error: ', $e->errors());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->errors());
+        } catch (\Exception $e) {
+            Log::error('Gallery Photo Store Error: ' . $e->getMessage());
+            Log::error('Stack Trace: ' . $e->getTraceAsString());
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while adding the photo: ' . $e->getMessage());
         }
-
-        GalleryPhoto::create($data);
-
-        return redirect()->route('admin.gallery.photos.index')
-            ->with('success', 'Gallery photo added successfully.');
     }
 
     public function show(GalleryPhoto $photo)
@@ -88,10 +135,11 @@ class GalleryPhotoController extends Controller
             'image_url' => 'nullable|url',
             'alt_text' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean'
         ]);
 
-        $data = $request->all();
+        $data = $request->only([
+            'category_id', 'title', 'description', 'image_url', 'alt_text', 'sort_order'
+        ]);
         $data['is_active'] = $request->has('is_active');
 
         // Handle image upload

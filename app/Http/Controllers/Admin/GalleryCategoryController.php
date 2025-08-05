@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GalleryCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class GalleryCategoryController extends Controller
 {
@@ -22,21 +23,42 @@ class GalleryCategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean'
-        ]);
+        try {
+            // Debug logging
+            Log::info('Gallery Category Store Method Called');
+            Log::info('Request Data: ', $request->all());
+            
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'sort_order' => 'nullable|integer|min:0',
+            ]);
 
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
-        $data['is_active'] = $request->has('is_active');
+            $data = $request->only(['name', 'description', 'sort_order']);
+            $data['slug'] = Str::slug($request->name);
+            $data['is_active'] = $request->has('is_active');
 
-        GalleryCategory::create($data);
+            Log::info('Processed Data: ', $data);
 
-        return redirect()->route('admin.gallery.categories.index')
-            ->with('success', 'Gallery category created successfully.');
+            $category = GalleryCategory::create($data);
+            
+            Log::info('Category Created: ', ['id' => $category->id, 'name' => $category->name]);
+
+            return redirect()->route('admin.gallery.categories.index')
+                ->with('success', 'Gallery category created successfully.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Gallery Category Validation Error: ', $e->errors());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->errors());
+        } catch (\Exception $e) {
+            Log::error('Gallery Category Store Error: ' . $e->getMessage());
+            Log::error('Stack Trace: ' . $e->getTraceAsString());
+            
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'An error occurred while creating the category: ' . $e->getMessage());
+        }
     }
 
     public function show(GalleryCategory $category)
@@ -58,10 +80,9 @@ class GalleryCategoryController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'boolean'
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['name', 'description', 'sort_order']);
         $data['slug'] = Str::slug($request->name);
         $data['is_active'] = $request->has('is_active');
 

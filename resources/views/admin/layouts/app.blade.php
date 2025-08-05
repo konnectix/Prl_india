@@ -484,11 +484,15 @@
                         <span>ESG Management</span>
                     </a>
                 </li>
-                <li>
+                <li class="has-submenu">
                     <a href="#" class="">
                         <i class="fas fa-network-wired"></i>
                         <span>Network Management</span>
                     </a>
+                    <ul class="submenu">
+                        <li><a href="{{ route('admin.contact.locations.index') }}"><i class="fas fa-map-marker-alt"></i>Office Locations</a></li>
+                        <li><a href="{{ route('admin.contact.info.index') }}"><i class="fas fa-info-circle"></i>Contact Information</a></li>
+                    </ul>
                 </li>
                 <li class="has-submenu">
                     <a href="#" class="">
@@ -513,7 +517,8 @@
                         <span>Media Management</span>
                     </a>
                     <ul class="submenu">
-                        <li><a href="#"><i class="fas fa-newspaper"></i>Press Coverage</a></li>
+                        <li><a href="{{ route('admin.press.categories.index') }}"><i class="fas fa-list"></i>Press Categories</a></li>
+                        <li><a href="{{ route('admin.press.articles.index') }}"><i class="fas fa-newspaper"></i>Press Coverage</a></li>
                         <li><a href="{{ route('admin.gallery.categories.index') }}"><i class="fas fa-folder"></i>Gallery Categories</a></li>
                         <li><a href="{{ route('admin.gallery.photos.index') }}"><i class="fas fa-images"></i>Photos</a></li>
                         <li><a href="#"><i class="fas fa-video"></i>Videos</a></li>

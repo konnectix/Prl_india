@@ -30,6 +30,11 @@ class GalleryPhoto extends Model
         return $this->belongsTo(GalleryCategory::class, 'category_id');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
     public function getImageUrlAttribute($value)
     {
         if ($value) {
