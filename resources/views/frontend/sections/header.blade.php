@@ -139,7 +139,7 @@
                                                 <li><a href="#">Investor 3</a></li>
                                             </ul>
                                         </li> 
-                                        <li><a href="{{ route('frontend.blog') }}">Blog</a></li>  
+                                        <li><a href="{{ route('frontend.blog') }}">ESG</a></li>  
                                         <li><a href="{{ route('frontend.contact') }}">Network</a></li>
                                         <li class="dropdown"><a href="#">Media</a>
                                             <ul>

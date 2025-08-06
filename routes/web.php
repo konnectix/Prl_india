@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\ContactLocationController;
 use App\Http\Controllers\Admin\ContactInfoController;
 use App\Http\Controllers\Admin\VideoCategoryController;
 use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\EsgCategoryController;
+use App\Http\Controllers\Admin\EsgArticleController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,6 +32,9 @@ Route::get('/press-coverage/{id}', [App\Http\Controllers\Frontend\IndexControlle
 Route::get('/photo', [App\Http\Controllers\Frontend\IndexController::class, 'photo'])->name('frontend.photo');
 Route::get('/video', [App\Http\Controllers\Frontend\IndexController::class, 'video'])->name('frontend.video');
 Route::get('/cmd', [App\Http\Controllers\Frontend\IndexController::class, 'cmd'])->name('frontend.cmd');
+Route::get('/esg', [App\Http\Controllers\Frontend\IndexController::class, 'esg'])->name('frontend.esg');
+Route::get('/esg/{category}', [App\Http\Controllers\Frontend\IndexController::class, 'esgCategory'])->name('frontend.esg-category');
+Route::get('/esg/{category}/{article}', [App\Http\Controllers\Frontend\IndexController::class, 'esgDetails'])->name('frontend.esg-article');
 
 // Default login redirect
 Route::get('/login', function () {
@@ -155,6 +160,36 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/videos/bulk-delete', [VideoController::class, 'bulkDelete'])->name('videos.bulk-delete');
             Route::patch('/videos/{video}/toggle-featured', [VideoController::class, 'toggleFeatured'])->name('videos.toggle-featured');
             Route::patch('/videos/{video}/toggle-status', [VideoController::class, 'toggleStatus'])->name('videos.toggle-status');
+        });
+
+        // ESG Management Routes
+        Route::prefix('esg')->name('esg.')->group(function () {
+            Route::resource('categories', EsgCategoryController::class, [
+                'names' => [
+                    'index' => 'categories.index',
+                    'create' => 'categories.create',
+                    'store' => 'categories.store',
+                    'show' => 'categories.show',
+                    'edit' => 'categories.edit',
+                    'update' => 'categories.update',
+                    'destroy' => 'categories.destroy',
+                ]
+            ]);
+
+            Route::resource('articles', EsgArticleController::class, [
+                'names' => [
+                    'index' => 'articles.index',
+                    'create' => 'articles.create',
+                    'store' => 'articles.store',
+                    'show' => 'articles.show',
+                    'edit' => 'articles.edit',
+                    'update' => 'articles.update',
+                    'destroy' => 'articles.destroy',
+                ]
+            ]);
+            Route::post('/articles/bulk-delete', [EsgArticleController::class, 'bulkDelete'])->name('articles.bulk-delete');
+            Route::patch('/articles/{article}/toggle-featured', [EsgArticleController::class, 'toggleFeatured'])->name('articles.toggle-featured');
+            Route::patch('/articles/{article}/toggle-status', [EsgArticleController::class, 'toggleStatus'])->name('articles.toggle-status');
         });
     });
 });

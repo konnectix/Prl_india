@@ -1,12 +1,70 @@
 @extends('layouts.layout')
 @section('styles')
 <style>
+.blog-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
 
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.blog-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.blog-category {
+    background: #007bff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.blog-meta {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.blog-excerpt {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.read-more-btn {
+    background: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.read-more-btn:hover {
+    background: #0056b3;
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
 </style>
 @endsection
 @section('content')
 
- <!-- page-title -->
+        <!-- page-title -->
         <section class="page-title centred">
             <div class="bg-layer" style="background-image: url({{ asset('frontend/assets/images/background/page-title.jpg') }});"></div>
             <div class="line-box">
@@ -15,235 +73,171 @@
             </div>
             <div class="auto-container">
                 <div class="content-box">
-                    <h1>News & Updates</h1>
+                    <h1>Blog</h1>
                     <ul class="bread-crumb clearfix">
-                        <li><a href="#">Home</a></li>
+                        <li><a href="{{ route('frontend.home') }}">Home</a></li>
                         <li>Blog</li>
-                        <li>List View 02</li>
                     </ul>
                 </div>
             </div>
         </section>
         <!-- page-title end -->
 
-
-        <!-- sidebar-page-container -->
-        <section class="sidebar-page-container blog-list-two">
+        <!-- blog-grid -->
+        <section class="blog-grid">
             <div class="auto-container">
                 <div class="row clearfix">
-                    <div class="col-lg-8 col-md-12 col-sm-12 content-side">
-                        <div class="blog-list-content">
-                            <span class="big-text">to your success read our blog</span>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-16.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Manufacturing</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>14.10.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Lillian Grace</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">06 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Industry's Imperatives For Sustainability in...</a></h3>
-                                        <p>Nor again is there anyone who loves pursues desires to obtain pain of itself because it is pain but because procure him some great pleasure...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Blog Post 1 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-1.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Technology</div>
                             </div>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-17.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Smart Factory</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>28.09.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Oliver Jack</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">03 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Digital Manufacturing Week 2020 Leading the Way</a></h3>
-                                        <p>Right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 15, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
                                 </div>
-                            </div>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-18.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Smart Factory</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>06.09.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Jacob Harry</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">03 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Building Back a Sustainable Manufacturing Sector</a></h3>
-                                        <p>Duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted the wise man therefore...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
+                                <h3 class="mb-3">Digital Transformation in Logistics</h3>
+                                <div class="blog-excerpt">
+                                    Exploring how digital technologies are revolutionizing the logistics industry and improving supply chain efficiency.
                                 </div>
-                            </div>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-19.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Manufacturing</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>14.10.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Lillian Grace</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">06 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Industry's Imperatives For Sustainability in...</a></h3>
-                                        <p>Nor again is there anyone who loves pursues desires to obtain pain of itself because it is pain but because procure him some great pleasure...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-20.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Smart Factory</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>28.09.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Oliver Jack</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">03 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Digital Manufacturing Week 2020 Leading the Way</a></h3>
-                                        <p>Right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="news-block-one">
-                                <div class="inner-box">
-                                    <div class="image-box">
-                                        <figure class="image"><a href="#"><img src="{{ asset('frontend/assets/images/news/news-21.jpg') }}" alt=""></a></figure>
-                                        <div class="category"><a href="#">Smart Factory</a></div>
-                                    </div>
-                                    <div class="lower-content">
-                                        <ul class="post-info clearfix">
-                                            <li><i class="fa-regular fa-calendar"></i>06.09.2022</li>
-                                            <li><i class="fa-regular fa-user"></i><a href="#">Jacob Harry</a></li>
-                                            <li><i class="fa-regular fa-comment"></i><a href="#">03 Comments</a></li>
-                                        </ul>
-                                        <h3><a href="#">Building Back a Sustainable Manufacturing Sector</a></h3>
-                                        <p>Duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted the wise man therefore...</p>
-                                        <div class="link-box">
-                                            <a href="#"><span>More Details</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pagination-wrapper">
-                                <ul class="pagination clearfix">
-                                    <li><a href="#"><i class="flaticon-left-chevron"></i></a></li>
-                                    <li><a href="#" class="current">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#"><i class="flaticon-right-chevron"></i></a></li>
-                                </ul>
+                                <a href="{{ route('frontend.blog-details', 1) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-12 col-sm-12 sidebar-side">
-                        <div class="default-sidebar blog-sidebar">
-                            <div class="search-widget">
-                                <div class="search-form">
-                                    <form method="post" action="#">
-                                        <div class="form-group">
-                                            <input type="search" name="search-field" placeholder="Enter Keyword..." required>
-                                            <button type="submit"><i class="flaticon-loupe"></i></button>
-                                        </div>
-                                    </form>
-                                </div>
+
+                    <!-- Blog Post 2 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-2.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Industry</div>
                             </div>
-                            <div class="sidebar-widget category-widget">
-                                <div class="widget-title">
-                                    <h3>Categories</h3>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 12, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
                                 </div>
-                                <div class="widget-content">
-                                    <ul class="category-list clearfix"> 
-                                        <li><a href="#">All Post<span>30</span></a></li>
-                                        <li><a href="#">Innovations<span>03</span></a></li>
-                                        <li><a href="#">Manufacturing<span>05</span></a></li>
-                                        <li><a href="#">Materials<span>10</span></a></li>
-                                        <li><a href="#">Smart Factory<span>08</span></a></li>
-                                        <li><a href="#">Technology<span>04</span></a></li>
-                                    </ul>
+                                <h3 class="mb-3">Sustainable Supply Chain Practices</h3>
+                                <div class="blog-excerpt">
+                                    Learn about sustainable practices that are shaping the future of supply chain management and logistics operations.
                                 </div>
+                                <a href="{{ route('frontend.blog-details', 2) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
                             </div>
-                            <div class="sidebar-widget post-widget">
-                                <div class="widget-title">
-                                    <h3>Popular Post</h3>
-                                </div>
-                                <div class="post-inner">
-                                    <div class="post">
-                                        <h6>Industries</h6>
-                                        <h4><a href="#">Best for any Indutrial and Business Solution.</a></h4>
-                                        <h5><i class="fa-regular fa-calendar"></i>06.09.2022</h5>
-                                    </div>
-                                    <div class="post">
-                                        <h6>Technology</h6>
-                                        <h4><a href="#">Won Best Factory Award of the Year 2016 & 17.</a></h4>
-                                        <h5><i class="fa-regular fa-calendar"></i>05.09.2022</h5>
-                                    </div>
-                                    <div class="post">
-                                        <h6>Innovation</h6>
-                                        <h4><a href="#">Building Back a Sustainable Manufacturing Sector</a></h4>
-                                        <h5><i class="fa-regular fa-calendar"></i>26.08.2022</h5>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 3 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-3.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Innovation</div>
                             </div>
-                            <div class="sidebar-widget tags-widget">
-                                <div class="widget-title">
-                                    <h3>Popular Tags</h3>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 10, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
                                 </div>
-                                <div class="widget-content">
-                                    <ul class="tags-list clearfix"> 
-                                        <li><a href="#">Chemical</a></li>
-                                        <li><a href="#">Future</a></li>
-                                        <li><a href="#">Idea</a></li>
-                                        <li><a href="#">Industry</a></li>
-                                        <li><a href="#">2022</a></li>
-                                        <li><a href="#">Manufacturing</a></li>
-                                        <li><a href="#">Transport</a></li>
-                                        <li><a href="#">Technology</a></li>
-                                    </ul>
+                                <h3 class="mb-3">AI in Warehouse Management</h3>
+                                <div class="blog-excerpt">
+                                    Discover how artificial intelligence is optimizing warehouse operations and improving inventory management.
                                 </div>
+                                <a href="{{ route('frontend.blog-details', 3) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
                             </div>
-                            <div class="appointment-widget">
-                                <div class="image-box">
-                                    <figure class="image"><img src="{{ asset('frontend/assets/images/news/news-10.jpg') }}" alt=""></figure>
-                                    <div class="image-content">
-                                        <h2>Did't Get <span>Send Us Your</span> Questions.</h2>
-                                        <a href="#" class="theme-btn btn-two"><span>Contact Experts</span></a>
-                                    </div>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 4 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-7.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Logistics</div>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 08, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
                                 </div>
+                                <h3 class="mb-3">Last-Mile Delivery Optimization</h3>
+                                <div class="blog-excerpt">
+                                    Strategies and technologies for optimizing last-mile delivery to improve customer satisfaction and reduce costs.
+                                </div>
+                                <a href="{{ route('frontend.blog-details', 4) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 5 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-8.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Technology</div>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 05, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
+                                </div>
+                                <h3 class="mb-3">IoT in Supply Chain Visibility</h3>
+                                <div class="blog-excerpt">
+                                    How Internet of Things (IoT) devices are providing real-time visibility across the entire supply chain.
+                                </div>
+                                <a href="{{ route('frontend.blog-details', 5) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Blog Post 6 -->
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                        <div class="blog-card">
+                            <div style="position: relative;">
+                                <img src="{{ asset('frontend/assets/images/news/news-9.jpg') }}" alt="Blog Post" class="blog-image">
+                                <div class="blog-category">Industry</div>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="blog-meta">
+                                    <i class="fas fa-calendar mr-2"></i>March 03, 2024
+                                    <span class="ml-3"><i class="fas fa-user mr-1"></i>Admin</span>
+                                </div>
+                                <h3 class="mb-3">E-commerce Logistics Trends</h3>
+                                <div class="blog-excerpt">
+                                    Current trends and future outlook for e-commerce logistics in the rapidly evolving digital marketplace.
+                                </div>
+                                <a href="{{ route('frontend.blog-details', 6) }}" class="read-more-btn">
+                                    Read More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Pagination -->
+                <div class="pagination-wrapper centred">
+                    <ul class="pagination clearfix">
+                        <li><span><i class="flaticon-left-chevron"></i></span></li>
+                        <li><a href="#" class="current">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#"><i class="flaticon-right-chevron"></i></a></li>
+                    </ul>
+                </div>
             </div>
         </section>
-        <!-- sidebar-page-containers end -->
+        <!-- blog-grid end -->
 
 @endsection

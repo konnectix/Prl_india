@@ -11,6 +11,8 @@ use App\Models\ContactLocation;
 use App\Models\ContactInfo;
 use App\Models\Video;
 use App\Models\VideoCategory;
+use App\Models\EsgCategory;
+use App\Models\EsgArticle;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -226,5 +228,71 @@ class IndexController extends Controller
     public function cmd()
     {
         return view('frontend.sections.cmd');
+    }
+
+    /**
+     * Display the ESG page with categories overview
+     *
+     * @return \Illuminate\View\View
+     */
+    public function esg()
+    {
+        $categories = EsgCategory::active()
+            ->ordered()
+            ->withCount(['articles' => function($query) {
+                $query->active()->published();
+            }])
+            ->get();
+
+        return view('frontend.sections.esg', compact('categories'));
+    }
+
+    /**
+     * Display articles for a specific ESG category
+     *
+     * @param EsgCategory $category
+     * @return \Illuminate\View\View
+     */
+    public function esgCategory(EsgCategory $category)
+    {
+        $articles = EsgArticle::active()
+            ->published()
+            ->byCategory($category->id)
+            ->ordered()
+            ->paginate(12);
+
+        return view('frontend.sections.esg-category', compact('category', 'articles'));
+    }
+
+    /**
+     * Display a specific ESG article details
+     *
+     * @param EsgCategory $category
+     * @param EsgArticle $article
+     * @return \Illuminate\View\View
+     */
+    public function esgDetails(EsgCategory $category, EsgArticle $article)
+    {
+        // Ensure the article belongs to the category
+        if ($article->category_id !== $category->id) {
+            abort(404);
+        }
+
+        // Increment view count
+        $article->incrementViewCount();
+
+        // Get related articles from the same category
+        $relatedArticles = EsgArticle::active()
+            ->published()
+            ->byCategory($category->id)
+            ->where('id', '!=', $article->id)
+            ->ordered()
+            ->take(3)
+            ->get();
+
+        // Get all ESG categories for sidebar
+        $esgCategories = EsgCategory::active()->ordered()->get();
+
+        return view('frontend.sections.esg-article', compact('category', 'article', 'relatedArticles', 'esgCategories'));
     }
 } 

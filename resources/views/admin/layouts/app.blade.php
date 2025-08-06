@@ -478,11 +478,15 @@
                         <li><a href="#"><i class="fas fa-plus-circle"></i>Value Added Services</a></li>
                     </ul>
                 </li>
-                <li>
+                <li class="has-submenu">
                     <a href="#" class="">
                         <i class="fas fa-leaf"></i>
                         <span>ESG Management</span>
                     </a>
+                    <ul class="submenu">
+                        <li><a href="{{ route('admin.esg.categories.index') }}"><i class="fas fa-list"></i>ESG Categories</a></li>
+                        <li><a href="{{ route('admin.esg.articles.index') }}"><i class="fas fa-file-alt"></i>ESG Articles</a></li>
+                    </ul>
                 </li>
                 <li class="has-submenu">
                     <a href="#" class="">
